@@ -49,6 +49,7 @@ public class ApartmentEnt {
     @Positive(message = "Area must be positive")
     private Double area;
 
+    //ciao
     @Column(nullable = false)
     @NotNull(message = "Price per night cannot be null")
     @Positive(message = "Price per night must be positive")
