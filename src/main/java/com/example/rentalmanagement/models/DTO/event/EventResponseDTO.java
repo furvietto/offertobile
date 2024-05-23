@@ -4,11 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventResponseDTO {
 
     private Integer id;
@@ -24,4 +28,5 @@ public class EventResponseDTO {
     private String location;
 
     private String eventType;
+
 }

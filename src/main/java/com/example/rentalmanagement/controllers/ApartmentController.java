@@ -1,17 +1,23 @@
 package com.example.rentalmanagement.controllers;
 
+import com.example.rentalmanagement.exceptions.ErrorDetails;
+import com.example.rentalmanagement.exceptions.ResourceNotFoundException;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTO;
 import com.example.rentalmanagement.models.DTO.event.EventRequestDTONoId;
+import com.example.rentalmanagement.models.DTO.event.EventResponseDTO;
 import com.example.rentalmanagement.models.DTO.photo.PhotoResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
+import com.example.rentalmanagement.services.ApartmentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -77,7 +83,7 @@ public class ApartmentController {
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApartmentResponseDTO> updateApartment(@PathVariable int id,@RequestBody @Valid ApartmentRequestDTONoId apartment) {
+    public ResponseEntity<ApartmentResponseDTO> updateApartment(@PathVariable Integer id,@RequestBody @Valid ApartmentRequestDTONoId apartment) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.update(id,apartment));
     }
 
@@ -91,7 +97,7 @@ public class ApartmentController {
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteApartment(@PathVariable int id) {
+    public ResponseEntity<Void> deleteApartment(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -101,7 +107,7 @@ public class ApartmentController {
      * @return Event details.
      */
     @GetMapping("apartment/{id}/event")
-    public ResponseEntity<EventRequestDTONoId> getEventByApartmentId(@PathVariable int id) {
+    public ResponseEntity<EventResponseDTO> getEventByApartmentId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getEventByApartmentId(id));
     }
 
@@ -133,4 +139,18 @@ public class ApartmentController {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getReservationsByApartmentId(id));
     }
 
+    /*
+    //we manage the specific exception here and return the custom message to client
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException (ResourceNotFoundException exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "APARTMENT_NOT_FOUND"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+     */
 }
