@@ -43,7 +43,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationResponseDTO findById(int id) {
+    public ReservationResponseDTO findById(Integer id) {
         log.info("Retrieving reservation with ID: {}", id);
         ReservationEnt reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> {
@@ -62,7 +62,7 @@ public class ReservationService {
         return convertToResponseDTO(reservation);
     }
 
-    public ReservationResponseDTO update(int id, ReservationRequestDTONoId reservationDTO) {
+    public ReservationResponseDTO update(Integer id, ReservationRequestDTONoId reservationDTO) {
         log.info("Updating reservation with ID: {}", id);
         ReservationEnt existingReservation = reservationRepository.findById(id)
                 .orElseThrow(() -> {
@@ -84,7 +84,7 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public List<PaymentResponseDTONoIdNoFk> getPaymentsByReservationId(int id) {
+    public List<PaymentResponseDTONoIdNoFk> getPaymentsByReservationId(Integer id) {
         log.info("Retrieving payments for reservation with ID: {}", id);
         if (!reservationRepository.existsById(id)) {
             log.error("Reservation not found with ID: {}", id);
@@ -121,7 +121,10 @@ public class ReservationService {
 
     private PaymentResponseDTONoIdNoFk convertToPaymentResponseDTO(PaymentEnt payment) {
         PaymentResponseDTONoIdNoFk dto = new PaymentResponseDTONoIdNoFk();
-        BeanUtils.copyProperties(payment, dto);
+        dto.setPaymentDate(payment.getPaymentDate());
+        dto.setAmount(payment.getAmount());
+        dto.setPaymentMethod(payment.getPaymentMethod());
+        dto.setPaymentStatus(payment.getPaymentStatus());
         return dto;
     }
 }

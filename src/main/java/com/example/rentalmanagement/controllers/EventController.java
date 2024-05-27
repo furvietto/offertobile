@@ -5,6 +5,12 @@ import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTONoI
 import com.example.rentalmanagement.models.DTO.event.EventRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.event.EventResponseDTO;
 import com.example.rentalmanagement.services.EventService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +24,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/events")
+@Tag(name = "Event Management", description = "Operations pertaining to events in the Rental Management System")
 public class EventController {
     private final EventService eventService;
 
@@ -29,10 +36,15 @@ public class EventController {
      * Retrieve all events.
      * @return List of all events.
      */
+    @Operation(summary = "Retrieve all events")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the events",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EventResponseDTO.class)) })
+    })
     @RequestMapping(
             path = "getAllEvents",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
@@ -44,13 +56,20 @@ public class EventController {
      * @param id ID of the event.
      * @return Event details.
      */
+    @Operation(summary = "Retrieve an event by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the event",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EventResponseDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Event not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "getEventById/{id}",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable int id) {
+    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.findById(id));
     }
 
@@ -59,6 +78,12 @@ public class EventController {
      * @param event DTO containing event details.
      * @return Created event details.
      */
+    @Operation(summary = "Create a new event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created the event",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EventResponseDTO.class)) })
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -74,13 +99,21 @@ public class EventController {
      * @param event DTO containing updated event details.
      * @return Updated event details.
      */
+    @Operation(summary = "Update an existing event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated the event",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EventResponseDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Event not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "updateEvent/{id}",
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable int id, @RequestBody @Valid EventRequestDTONoId event) {
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Integer id, @RequestBody @Valid EventRequestDTONoId event) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.update(id, event));
     }
 
@@ -89,13 +122,19 @@ public class EventController {
      * @param id ID of the event to delete.
      * @return No content.
      */
+    @Operation(summary = "Delete an event by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted the event",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Event not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "deleteEvent/{id}",
             method = RequestMethod.DELETE,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Void> deleteEvent(@PathVariable int id) {
+    public ResponseEntity<Void> deleteEvent(@PathVariable Integer id) {
         eventService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -105,7 +144,19 @@ public class EventController {
      * @param id ID of the event.
      * @return List of apartments associated with the event.
      */
-    @GetMapping("event/{id}/apartments")
+    @Operation(summary = "Retrieve apartments by event ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the apartments",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApartmentResponseDTONoIdNoFk.class)) }),
+            @ApiResponse(responseCode = "404", description = "Event not found",
+                    content = @Content)
+    })
+    @RequestMapping(
+            path = "event/{id}/apartments",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<List<ApartmentResponseDTONoIdNoFk>> getApartmentsByEventId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getApartmentsByEventId(id));
     }

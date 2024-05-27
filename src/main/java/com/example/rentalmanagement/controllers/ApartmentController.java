@@ -9,6 +9,12 @@ import com.example.rentalmanagement.models.DTO.event.EventResponseDTO;
 import com.example.rentalmanagement.models.DTO.photo.PhotoResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
 import com.example.rentalmanagement.services.ApartmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +30,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/apartments")
+@Tag(name = "Apartment Management", description = "Operations pertaining to apartments in the Rental Management System")
 public class ApartmentController {
 
     private final ApartmentService apartmentService;
@@ -37,6 +44,12 @@ public class ApartmentController {
      * Retrieve all apartments.
      * @return List of all apartments.
      */
+    @Operation(summary = "Retrieve all apartments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the apartments",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApartmentResponseDTO.class)) })
+    })
     @RequestMapping(
             path = "/getAllApartments",
             method = RequestMethod.GET,
@@ -50,10 +63,17 @@ public class ApartmentController {
      * @param id ID of the apartment.
      * @return Apartment details.
      */
+    @Operation(summary = "Retrieve an apartment by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the apartment",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApartmentResponseDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Apartment not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "/getApartmentById/{id}",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApartmentResponseDTO> getApartment(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.findById(id));
@@ -64,6 +84,12 @@ public class ApartmentController {
      * @param apartment DTO containing apartment details.
      * @return Created apartment details.
      */
+    @Operation(summary = "Create a new apartment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created the apartment",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApartmentResponseDTO.class)) })
+    })
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -77,6 +103,14 @@ public class ApartmentController {
      * @param apartment DTO containing updated apartment details.
      * @return Updated apartment details.
      */
+    @Operation(summary = "Update an existing apartment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated the apartment",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApartmentResponseDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Apartment not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "/updateApartments/{id}",
             method = RequestMethod.PUT,
@@ -91,10 +125,16 @@ public class ApartmentController {
      * @param id ID of the apartment to delete.
      * @return String.
      */
+    @Operation(summary = "Delete an apartment by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted the apartment",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Apartment not found",
+                    content = @Content)
+    })
     @RequestMapping(
             path = "/deleteApartmentsById/{id}",
             method = RequestMethod.DELETE,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteApartment(@PathVariable Integer id) {
         apartmentService.delete(id);
@@ -106,6 +146,14 @@ public class ApartmentController {
      * @param id ID of the apartment.
      * @return Event details.
      */
+    @Operation(summary = "Retrieve the event associated with an apartment by apartment ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the event",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EventResponseDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Event not found",
+                    content = @Content)
+    })
     @GetMapping("apartment/{id}/event")
     public ResponseEntity<EventResponseDTO> getEventByApartmentId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getEventByApartmentId(id));
@@ -116,12 +164,17 @@ public class ApartmentController {
      * @param id ID of the apartment.
      * @return List of photos.
      */
+    @Operation(summary = "Retrieve the photos associated with an apartment by apartment ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the photos",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PhotoResponseDTONoIdNoFk.class)) })
+    })
     @RequestMapping(
-            path = "/apartments/{id}/photos",
+            path = "/apartment/{id}/event",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PhotoResponseDTONoIdNoFk>>getPhotosByApartmentId(@PathVariable int id) {
+    public ResponseEntity<List<PhotoResponseDTONoIdNoFk>>getPhotosByApartmentId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getPhotosByApartmentId(id));
     }
 
@@ -130,12 +183,17 @@ public class ApartmentController {
      * @param id ID of the apartment.
      * @return List of reservations.
      */
+    @Operation(summary = "Retrieve the reservations associated with an apartment by apartment ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the reservations",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ReservationResponseDTONoIdNoFk.class)) })
+    })
     @RequestMapping(
             path = "/apartments/{id}/reservations",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ReservationResponseDTONoIdNoFk>> getReservationsByApartmentId(@PathVariable int id) {
+    public ResponseEntity<List<ReservationResponseDTONoIdNoFk>> getReservationsByApartmentId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getReservationsByApartmentId(id));
     }
 
