@@ -19,7 +19,7 @@ import java.util.Date;
 public class ReservationRequestDTONoId {
 
     @NotNull(message = "Apartment ID cannot be null")
-    private ApartmentEnt apartment;
+    private Integer apartmentId;
 
     @NotNull(message = "Customer ID cannot be null")
     private Integer customerId;

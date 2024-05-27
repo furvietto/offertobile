@@ -3,6 +3,7 @@ package com.example.rentalmanagement.controllers;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.owner.OwnerRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.owner.OwnerResponseDTO;
+import com.example.rentalmanagement.services.OwnerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,7 @@ public class OwnerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<ApartmentResponseDTONoIdNoFk>> getApartmentsByOwnerId(@PathVariable int id) {
+    public ResponseEntity<List<ApartmentResponseDTONoIdNoFk>> getApartmentsByOwnerId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.getApartmentsByOwnerId(id));
     }
 
@@ -97,7 +98,7 @@ public class OwnerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<OwnerResponseDTO> updateOwner(@PathVariable int id, @RequestBody @Valid OwnerRequestDTONoId owner) {
+    public ResponseEntity<OwnerResponseDTO> updateOwner(@PathVariable Integer id, @RequestBody @Valid OwnerRequestDTONoId owner) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ownerService.update(id,owner));
     }
 

@@ -18,8 +18,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class ReservationResponseDTONoIdNoFk {
 
-    private CustomerEnt customer;
-
     private Date startDate;
 
     private Date endDate;

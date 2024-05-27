@@ -2,12 +2,15 @@ package com.example.rentalmanagement.controllers;
 
 import com.example.rentalmanagement.models.DTO.photo.PhotoRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.photo.PhotoResponseDTO;
+import com.example.rentalmanagement.services.PhotoService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,7 +49,7 @@ public class PhotoController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PhotoResponseDTO> getPhoto(@PathVariable int id) {
+    public ResponseEntity<PhotoResponseDTO> getPhoto(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(photoService.findById(id));
     }
 
@@ -75,7 +78,7 @@ public class PhotoController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PhotoResponseDTO> updatePhoto(@PathVariable int id, @RequestBody @Valid PhotoRequestDTONoId photo) {
+    public ResponseEntity<PhotoResponseDTO> updatePhoto(@PathVariable Integer id, @RequestBody @Valid PhotoRequestDTONoId photo) {
         return ResponseEntity.status(HttpStatus.OK).body(photoService.update(id, photo));
     }
 
@@ -90,7 +93,7 @@ public class PhotoController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Void> deletePhoto(@PathVariable int id) {
+    public ResponseEntity<Void> deletePhoto(@PathVariable Integer id) {
         photoService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

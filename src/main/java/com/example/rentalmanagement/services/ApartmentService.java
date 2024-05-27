@@ -3,124 +3,159 @@ package com.example.rentalmanagement.services;
 import com.example.rentalmanagement.exceptions.ResourceNotFoundException;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTO;
+import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.event.EventResponseDTO;
 import com.example.rentalmanagement.models.DTO.photo.PhotoResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
-import com.example.rentalmanagement.models.entities.ApartmentEnt;
-import com.example.rentalmanagement.models.entities.EventEnt;
-import com.example.rentalmanagement.models.entities.PhotoEnt;
-import com.example.rentalmanagement.models.entities.ReservationEnt;
-import com.example.rentalmanagement.repository.ApartmentRepository;
+import com.example.rentalmanagement.models.entities.*;
+import com.example.rentalmanagement.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
     private final EventRepository eventRepository;
-
-    private final OwnerRepository ownerRepository;
     private final PhotoRepository photoRepository;
     private final ReservationRepository reservationRepository;
+    private final OwnerRepository ownerRepository;
 
-    public ApartmentService(ApartmentRepository apartmentRepository,OwnerRepository ownerRepository ,EventRepository eventRepository,
-                            PhotoRepository photoRepository, ReservationRepository reservationRepository) {
+    public ApartmentService(ApartmentRepository apartmentRepository, EventRepository eventRepository, PhotoRepository photoRepository, ReservationRepository reservationRepository, OwnerRepository ownerRepository) {
         this.apartmentRepository = apartmentRepository;
-        this.ownerRepository = ownerRepository;
         this.eventRepository = eventRepository;
         this.photoRepository = photoRepository;
         this.reservationRepository = reservationRepository;
+        this.ownerRepository = ownerRepository;
     }
 
     public List<ApartmentResponseDTO> findAll() {
-        return apartmentRepository.findAll().stream()
+        log.info("Retrieving all apartments");
+        List<ApartmentEnt> apartments = apartmentRepository.findAll();
+        return apartments.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public ApartmentResponseDTO findById(Integer id) {
-        return apartmentRepository.findById(id)
-                .map(this::convertToResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",id));
-    }
-
-    public ApartmentResponseDTO save(ApartmentRequestDTONoId apartmentRequestDTONoId) {
-        ApartmentEnt apartment = new ApartmentEnt();
-        BeanUtils.copyProperties(apartmentRequestDTONoId, apartment);
-
-        // Set owner and event
-        apartment.setOwner(ownerRepository.findById(apartmentRequestDTONoId.getOwnerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Owner","id",apartmentRequestDTONoId.getOwnerId())));
-        apartment.setEvent(eventRepository.findById(apartmentRequestDTONoId.getEventId())
-                .orElseThrow(() -> new ResourceNotFoundException("Event","id",apartmentRequestDTONoId.getEventId())));
-
-        ApartmentEnt savedApartment = apartmentRepository.save(apartment);
-        return convertToResponseDTO(savedApartment);
-    }
-
-    public ApartmentResponseDTO update(int id, ApartmentRequestDTONoId apartmentRequestDTO) {
+        log.info("Retrieving apartment with ID: {}", id);
         ApartmentEnt apartment = apartmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",id));
+                .orElseThrow(() -> {
+                    log.error("Apartment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Apartment", "id", id);
+                });
+        return convertToResponseDTO(apartment);
+    }
 
-        // Copy properties from DTO to entity
-        BeanUtils.copyProperties(apartmentRequestDTO, apartment);
+    public ApartmentResponseDTO save(ApartmentRequestDTONoId apartmentDTO) {
+        log.info("Creating new apartment with address: {}", apartmentDTO.getAddress());
+        ApartmentEnt apartment = new ApartmentEnt();
+        BeanUtils.copyProperties(apartmentDTO, apartment);
+        setReferences(apartment, apartmentDTO);
+        apartment = apartmentRepository.save(apartment);
+        return convertToResponseDTO(apartment);
+    }
 
-        // Update owner and event
-        apartment.setOwner(ownerRepository.findById(apartmentRequestDTO.getOwnerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Owner","id",id)));
-        apartment.setEvent(eventRepository.findById(apartmentRequestDTO.getEventId())
-                .orElseThrow(() -> new ResourceNotFoundException("Event","id",id)));
-
-        ApartmentEnt updatedApartment = apartmentRepository.save(apartment);
-        return convertToResponseDTO(updatedApartment);
+    public ApartmentResponseDTO update(Integer id, ApartmentRequestDTONoId apartmentDTO) {
+        log.info("Updating apartment with ID: {}", id);
+        ApartmentEnt existingApartment = apartmentRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Apartment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Apartment", "id", id);
+                });
+        BeanUtils.copyProperties(apartmentDTO, existingApartment, "id");
+        setReferences(existingApartment, apartmentDTO);
+        apartmentRepository.save(existingApartment);
+        return convertToResponseDTO(existingApartment);
     }
 
     public void delete(Integer id) {
+        log.info("Deleting apartment with ID: {}", id);
+        if (!apartmentRepository.existsById(id)) {
+            log.error("Apartment not found with ID: {}", id);
+            throw new ResourceNotFoundException("Apartment", "id", id);
+        }
+        apartmentRepository.deleteById(id);
+    }
+
+    public EventResponseDTO getEventByApartmentId(Integer id) {
+        log.info("Retrieving event for apartment with ID: {}", id);
         ApartmentEnt apartment = apartmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",id));
-        apartmentRepository.delete(apartment);
-    }
-
-    public EventResponseDTO getEventByApartmentId(Integer apartmentId) {
-        ApartmentEnt apartment = apartmentRepository.findById(apartmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",apartmentId));
+                .orElseThrow(() -> {
+                    log.error("Apartment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Apartment", "id", id);
+                });
         EventEnt event = apartment.getEvent();
-        return new EventResponseDTO(event.getId(), event.getEventName(), event.getDescription(),
-                event.getStartDate(), event.getEndDate(), event.getLocation(), event.getEventType());
+        return convertToEventResponseDTO(event);
     }
 
-    public List<PhotoResponseDTONoIdNoFk> getPhotosByApartmentId(Integer apartmentId) {
-        ApartmentEnt apartment = apartmentRepository.findById(apartmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",apartmentId));
-        List<PhotoEnt> photos = apartment.getPhotos();
+    public List<PhotoResponseDTONoIdNoFk> getPhotosByApartmentId(Integer id) {
+        log.info("Retrieving photos for apartment with ID: {}", id);
+        if (!apartmentRepository.existsById(id)) {
+            log.error("Apartment not found with ID: {}", id);
+            throw new ResourceNotFoundException("Apartment", "id", id);
+        }
+        List<PhotoEnt> photos = photoRepository.findByApartmentId(id);
         return photos.stream()
-                .map(photo -> new PhotoResponseDTONoIdNoFk(photo.getPhoto(), photo.getDescription()))
+                .map(this::convertToPhotoResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<ReservationResponseDTONoIdNoFk> getReservationsByApartmentId(Integer apartmentId) {
-        ApartmentEnt apartment = apartmentRepository.findById(apartmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment","id",apartmentId));
-        List<ReservationEnt> reservations = apartment.getReservations();
+    public List<ReservationResponseDTONoIdNoFk> getReservationsByApartmentId(Integer id) {
+        log.info("Retrieving reservations for apartment with ID: {}", id);
+        if (!apartmentRepository.existsById(id)) {
+            log.error("Apartment not found with ID: {}", id);
+            throw new ResourceNotFoundException("Apartment", "id", id);
+        }
+        List<ReservationEnt> reservations = reservationRepository.findByApartmentId(id);
         return reservations.stream()
-                .map(reservation -> new ReservationResponseDTONoIdNoFk(
-                        reservation.getCustomer(),
-                        reservation.getStartDate(),
-                        reservation.getEndDate(),
-                        reservation.getTotalPayment(),
-                        reservation.getStatus()))
+                .map(this::convertToReservationResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    private void setReferences(ApartmentEnt apartment, ApartmentRequestDTONoId apartmentDTO) {
+        OwnerEnt owner = ownerRepository.findById(apartmentDTO.getOwnerId())
+                .orElseThrow(() -> {
+                    log.error("Owner not found with ID: {}", apartmentDTO.getOwnerId());
+                    return new ResourceNotFoundException("Owner", "id", apartmentDTO.getOwnerId());
+                });
+        EventEnt event = eventRepository.findById(apartmentDTO.getEventId())
+                .orElseThrow(() -> {
+                    log.error("Event not found with ID: {}", apartmentDTO.getEventId());
+                    return new ResourceNotFoundException("Event", "id", apartmentDTO.getEventId());
+                });
+        apartment.setOwner(owner);
+        apartment.setEvent(event);
     }
 
     private ApartmentResponseDTO convertToResponseDTO(ApartmentEnt apartment) {
-        ApartmentResponseDTO responseDTO = new ApartmentResponseDTO();
-        BeanUtils.copyProperties(apartment, responseDTO);
-        responseDTO.setOwnerId(apartment.getOwner().getId());
-        responseDTO.setEventId(apartment.getEvent().getId());
-        return responseDTO;
+        ApartmentResponseDTO dto = new ApartmentResponseDTO();
+        BeanUtils.copyProperties(apartment, dto);
+        dto.setOwnerId(apartment.getOwner().getId());
+        dto.setEventId(apartment.getEvent().getId());
+        return dto;
+    }
+
+    private EventResponseDTO convertToEventResponseDTO(EventEnt event) {
+        EventResponseDTO dto = new EventResponseDTO();
+        BeanUtils.copyProperties(event, dto);
+        return dto;
+    }
+
+    private PhotoResponseDTONoIdNoFk convertToPhotoResponseDTO(PhotoEnt photo) {
+        PhotoResponseDTONoIdNoFk dto = new PhotoResponseDTONoIdNoFk();
+        BeanUtils.copyProperties(photo, dto);
+        return dto;
+    }
+
+    private ReservationResponseDTONoIdNoFk convertToReservationResponseDTO(ReservationEnt reservation) {
+        ReservationResponseDTONoIdNoFk dto = new ReservationResponseDTONoIdNoFk();
+        BeanUtils.copyProperties(reservation, dto);
+        return dto;
     }
 }

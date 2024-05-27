@@ -20,7 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
+
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/apartments")
@@ -40,7 +40,6 @@ public class ApartmentController {
     @RequestMapping(
             path = "/getAllApartments",
             method = RequestMethod.GET,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ApartmentResponseDTO>> getAllApartments() {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.findAll());
@@ -98,6 +97,7 @@ public class ApartmentController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteApartment(@PathVariable Integer id) {
+        apartmentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -139,18 +139,4 @@ public class ApartmentController {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getReservationsByApartmentId(id));
     }
 
-    /*
-    //we manage the specific exception here and return the custom message to client
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException (ResourceNotFoundException exception, WebRequest webRequest) {
-        ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                webRequest.getDescription(false),
-                "APARTMENT_NOT_FOUND"
-        );
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-    }
-     */
 }

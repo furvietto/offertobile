@@ -4,6 +4,7 @@ package com.example.rentalmanagement.controllers;
 import com.example.rentalmanagement.models.DTO.apartment.ApartmentResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.event.EventRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.event.EventResponseDTO;
+import com.example.rentalmanagement.services.EventService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -105,7 +106,7 @@ public class EventController {
      * @return List of apartments associated with the event.
      */
     @GetMapping("event/{id}/apartments")
-    public ResponseEntity<List<ApartmentResponseDTONoIdNoFk>> getApartmentsByEventId(@PathVariable int id) {
+    public ResponseEntity<List<ApartmentResponseDTONoIdNoFk>> getApartmentsByEventId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getApartmentsByEventId(id));
     }
 }

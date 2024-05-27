@@ -10,4 +10,9 @@ public class RentalmanagementApplication {
 		SpringApplication.run(RentalmanagementApplication.class, args);
 	}
 
+	//logging:
+	//level:
+	//org:
+	//springframework: trace
+
 }

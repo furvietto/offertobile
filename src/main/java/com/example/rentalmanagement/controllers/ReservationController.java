@@ -3,6 +3,8 @@ package com.example.rentalmanagement.controllers;
 import com.example.rentalmanagement.models.DTO.payment.PaymentResponseDTONoIdNoFk;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTO;
+import com.example.rentalmanagement.services.PhotoService;
+import com.example.rentalmanagement.services.ReservationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,12 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/v1/reservations")
 public class ReservationController {
+
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     /**
      * Retrieve all reservations.

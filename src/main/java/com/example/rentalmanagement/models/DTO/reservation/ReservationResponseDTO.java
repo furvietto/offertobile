@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ReservationResponseDTO {
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class ReservationResponseDTO {
 
-    private Integer id;
+        private Integer id;
 
-    private Integer apartmentId;
+        private Integer apartmentId;
 
-    private CustomerEnt customer;
+        private Integer customerId;
 
-    private Date startDate;
+        private Date startDate;
 
-    private Date endDate;
+        private Date endDate;
 
-    private Double totalPayment;
+        private Double totalPayment;
 
-    private String status;
-}
+        private String status;
+    }

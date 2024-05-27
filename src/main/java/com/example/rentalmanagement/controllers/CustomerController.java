@@ -2,6 +2,8 @@ package com.example.rentalmanagement.controllers;
 
 import com.example.rentalmanagement.models.DTO.customer.CustomerRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.customer.CustomerResponseDTO;
+import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
+import com.example.rentalmanagement.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -109,7 +111,7 @@ public class CustomerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<ReservationCustomerResponseDTO>> getReservationsByCustomerId(@PathVariable int id) {
+    public ResponseEntity<List<ReservationResponseDTONoIdNoFk>> getReservationsByCustomerId(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.getReservationsByCustomerId(id));
     }
 

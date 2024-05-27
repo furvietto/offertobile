@@ -2,6 +2,8 @@ package com.example.rentalmanagement.controllers;
 
 import com.example.rentalmanagement.models.DTO.payment.PaymentRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.payment.PaymentResponseDTO;
+import com.example.rentalmanagement.models.DTO.payment.PaymentResponseDTONoIdNoFk;
+import com.example.rentalmanagement.services.PaymentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -108,7 +110,7 @@ public class PaymentController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<PaymentReservationResponseDTO> getReservationByPaymentId(@PathVariable int id) {
+    public ResponseEntity<PaymentResponseDTONoIdNoFk> getReservationByPaymentId(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(paymentService.getReservationByPaymentId(id));
     }
 }
