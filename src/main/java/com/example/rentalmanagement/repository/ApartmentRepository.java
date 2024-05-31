@@ -8,5 +8,4 @@ import java.util.List;
 public interface ApartmentRepository extends JpaRepository<ApartmentEnt, Integer> {
     List<ApartmentEnt> findByEventId(int eventId);
 
-    List<ApartmentEnt> findByOwnerId(Integer ownerId);
 }

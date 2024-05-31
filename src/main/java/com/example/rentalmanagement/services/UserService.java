@@ -1,45 +1,44 @@
 package com.example.rentalmanagement.services;
 
 import com.example.rentalmanagement.exceptions.ResourceNotFoundException;
-import com.example.rentalmanagement.models.DTO.customer.CustomerRequestDTONoId;
-import com.example.rentalmanagement.models.DTO.customer.CustomerResponseDTO;
+import com.example.rentalmanagement.models.DTO.user.UserRequestDTONoId;
+import com.example.rentalmanagement.models.DTO.user.UserResponseDTO;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
-import com.example.rentalmanagement.models.entities.CustomerEnt;
+import com.example.rentalmanagement.models.entities.UserEnt;
 import com.example.rentalmanagement.models.entities.ReservationEnt;
-import com.example.rentalmanagement.repository.CustomerRepository;
+import com.example.rentalmanagement.repository.UserRepository;
 import com.example.rentalmanagement.repository.ReservationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class  CustomerService {
+public class UserService {
 
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
 
-    public CustomerService(CustomerRepository customerRepository, ReservationRepository reservationRepository) {
-        this.customerRepository = customerRepository;
+    public UserService(UserRepository userRepository, ReservationRepository reservationRepository) {
+        this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
     }
 
-    public List<CustomerResponseDTO> findAll() {
+    public List<UserResponseDTO> findAll() {
         log.info("Retrieving all customers");
-        List<CustomerEnt> customers = customerRepository.findAll();
+        List<UserEnt> customers = userRepository.findAll();
         return customers.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public CustomerResponseDTO findById(int id) {
-        log.info("Retrieving customer with ID: {}", id);
-        CustomerEnt customer = customerRepository.findById(id)
+    public UserResponseDTO findById(Integer id) {
+        log.info("Retrieving user with ID: {}", id);
+        UserEnt customer = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Customer not found with ID: {}", id);
                     return new ResourceNotFoundException("Customer", "id", id);
@@ -48,51 +47,51 @@ public class  CustomerService {
     }
 
 
-    public CustomerResponseDTO save(CustomerRequestDTONoId customerDTO) {
-        log.info("Creating new customer with username: {}", customerDTO.getUsername());
-        CustomerEnt customer = new CustomerEnt();
+    public UserResponseDTO save(UserRequestDTONoId customerDTO) {
+        log.info("Creating new user with username: {}", customerDTO.getUsername());
+        UserEnt customer = new UserEnt();
         BeanUtils.copyProperties(customerDTO, customer);
-        customer = customerRepository.save(customer);
+        customer = userRepository.save(customer);
         return convertToResponseDTO(customer);
     }
 
 
-    public CustomerResponseDTO update(int id, CustomerRequestDTONoId customerDTO) {
-        log.info("Updating customer with ID: {}", id);
-        CustomerEnt existingCustomer = customerRepository.findById(id)
+    public UserResponseDTO update(Integer id, UserRequestDTONoId customerDTO) {
+        log.info("Updating user with ID: {}", id);
+        UserEnt existingCustomer = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Customer not found with ID: {}", id);
                     return new ResourceNotFoundException("Customer", "id", id);
                 });
         BeanUtils.copyProperties(customerDTO, existingCustomer, "id");
-        customerRepository.save(existingCustomer);
+        userRepository.save(existingCustomer);
         return convertToResponseDTO(existingCustomer);
     }
 
-    public void delete(int id) {
-        log.info("Deleting customer with ID: {}", id);
-        if (!customerRepository.existsById(id)) {
+    public void delete(Integer id) {
+        log.info("Deleting user with ID: {}", id);
+        if (!userRepository.existsById(id)) {
             log.error("Customer not found with ID: {}", id);
             throw new ResourceNotFoundException("Customer", "id", id);
         }
-        customerRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
 
     public List<ReservationResponseDTONoIdNoFk> getReservationsByCustomerId(Integer id) {
-        log.info("Retrieving reservations for customer with ID: {}", id);
-        if (!customerRepository.existsById(id)) {
+        log.info("Retrieving reservations for user with ID: {}", id);
+        if (!userRepository.existsById(id)) {
             log.error("Customer not found with ID: {}", id);
             throw new ResourceNotFoundException("Customer", "id", id);
         }
-        List<ReservationEnt> reservations = reservationRepository.findByCustomerId(id);
+        List<ReservationEnt> reservations = reservationRepository.findByUserId(id);
         return reservations.stream()
                 .map(this::convertToReservationResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    private CustomerResponseDTO convertToResponseDTO(CustomerEnt customer) {
-        CustomerResponseDTO dto = new CustomerResponseDTO();
+    private UserResponseDTO convertToResponseDTO(UserEnt customer) {
+        UserResponseDTO dto = new UserResponseDTO();
         BeanUtils.copyProperties(customer, dto);
         return dto;
     }

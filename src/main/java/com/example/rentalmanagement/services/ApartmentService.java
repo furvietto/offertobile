@@ -24,14 +24,14 @@ public class ApartmentService {
     private final EventRepository eventRepository;
     private final PhotoRepository photoRepository;
     private final ReservationRepository reservationRepository;
-    private final OwnerRepository ownerRepository;
+    private final UserRepository userRepository;
 
-    public ApartmentService(ApartmentRepository apartmentRepository, EventRepository eventRepository, PhotoRepository photoRepository, ReservationRepository reservationRepository, OwnerRepository ownerRepository) {
+    public ApartmentService(ApartmentRepository apartmentRepository, EventRepository eventRepository, PhotoRepository photoRepository, ReservationRepository reservationRepository, UserRepository userRepository) {
         this.apartmentRepository = apartmentRepository;
         this.eventRepository = eventRepository;
         this.photoRepository = photoRepository;
         this.reservationRepository = reservationRepository;
-        this.ownerRepository = ownerRepository;
+        this.userRepository = userRepository;
     }
 
     public List<ApartmentResponseDTO> findAll() {
@@ -119,7 +119,7 @@ public class ApartmentService {
     }
 
     private void setReferences(ApartmentEnt apartment, ApartmentRequestDTONoId apartmentDTO) {
-        OwnerEnt owner = ownerRepository.findById(apartmentDTO.getOwnerId())
+        UserEnt owner = userRepository.findById(apartmentDTO.getOwnerId())
                 .orElseThrow(() -> {
                     log.error("Owner not found with ID: {}", apartmentDTO.getOwnerId());
                     return new ResourceNotFoundException("Owner", "id", apartmentDTO.getOwnerId());
@@ -129,14 +129,14 @@ public class ApartmentService {
                     log.error("Event not found with ID: {}", apartmentDTO.getEventId());
                     return new ResourceNotFoundException("Event", "id", apartmentDTO.getEventId());
                 });
-        apartment.setOwner(owner);
+        apartment.setUser(owner);
         apartment.setEvent(event);
     }
 
     private ApartmentResponseDTO convertToResponseDTO(ApartmentEnt apartment) {
         ApartmentResponseDTO dto = new ApartmentResponseDTO();
         BeanUtils.copyProperties(apartment, dto);
-        dto.setOwnerId(apartment.getOwner().getId());
+        dto.setOwnerId(apartment.getUser().getId());
         dto.setEventId(apartment.getEvent().getId());
         return dto;
     }

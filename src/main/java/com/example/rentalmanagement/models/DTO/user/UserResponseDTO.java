@@ -1,4 +1,4 @@
-package com.example.rentalmanagement.models.DTO.customer;
+package com.example.rentalmanagement.models.DTO.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerResponseDTO {
+public class UserResponseDTO {
 
     private Integer id;
 

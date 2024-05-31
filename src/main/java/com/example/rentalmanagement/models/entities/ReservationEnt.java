@@ -35,9 +35,9 @@ public class ReservationEnt {
     private ApartmentEnt apartment;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    @NotNull(message = "Customer ID cannot be null")
-    private CustomerEnt customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User cannot be null")
+    private UserEnt user;
 
     @Column(nullable = false)
     @NotNull(message = "Start date cannot be null")

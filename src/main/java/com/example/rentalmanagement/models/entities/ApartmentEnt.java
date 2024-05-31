@@ -59,9 +59,9 @@ public class ApartmentEnt {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    @NotNull(message = "Owner ID cannot be null")
-    private OwnerEnt owner;
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User cannot be null")
+    private UserEnt user;
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)

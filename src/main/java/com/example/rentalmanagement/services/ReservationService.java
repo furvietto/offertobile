@@ -5,11 +5,11 @@ import com.example.rentalmanagement.models.DTO.payment.PaymentResponseDTONoIdNoF
 import com.example.rentalmanagement.models.DTO.reservation.ReservationRequestDTONoId;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTO;
 import com.example.rentalmanagement.models.entities.ApartmentEnt;
-import com.example.rentalmanagement.models.entities.CustomerEnt;
+import com.example.rentalmanagement.models.entities.UserEnt;
 import com.example.rentalmanagement.models.entities.PaymentEnt;
 import com.example.rentalmanagement.models.entities.ReservationEnt;
 import com.example.rentalmanagement.repository.ApartmentRepository;
-import com.example.rentalmanagement.repository.CustomerRepository;
+import com.example.rentalmanagement.repository.UserRepository;
 import com.example.rentalmanagement.repository.PaymentRepository;
 import com.example.rentalmanagement.repository.ReservationRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +25,13 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ApartmentRepository apartmentRepository;
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ApartmentRepository apartmentRepository, CustomerRepository customerRepository, PaymentRepository paymentRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ApartmentRepository apartmentRepository, UserRepository userRepository, PaymentRepository paymentRepository) {
         this.reservationRepository = reservationRepository;
         this.apartmentRepository = apartmentRepository;
-        this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
         this.paymentRepository = paymentRepository;
     }
 
@@ -102,20 +102,20 @@ public class ReservationService {
                     log.error("Apartment not found with ID: {}", reservationDTO.getApartmentId());
                     return new ResourceNotFoundException("Apartment", "id", reservationDTO.getApartmentId());
                 });
-        CustomerEnt customer = customerRepository.findById(reservationDTO.getCustomerId())
+        UserEnt customer = userRepository.findById(reservationDTO.getCustomerId())
                 .orElseThrow(() -> {
                     log.error("Customer not found with ID: {}", reservationDTO.getCustomerId());
                     return new ResourceNotFoundException("Customer", "id", reservationDTO.getCustomerId());
                 });
         reservation.setApartment(apartment);
-        reservation.setCustomer(customer);
+        reservation.setUser(customer);
     }
 
     private ReservationResponseDTO convertToResponseDTO(ReservationEnt reservation) {
         ReservationResponseDTO dto = new ReservationResponseDTO();
         BeanUtils.copyProperties(reservation, dto);
         dto.setApartmentId(reservation.getApartment().getId());
-        dto.setCustomerId(reservation.getCustomer().getId());
+        dto.setCustomerId(reservation.getUser().getId());
         return dto;
     }
 

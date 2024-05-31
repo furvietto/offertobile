@@ -1,9 +1,9 @@
 package com.example.rentalmanagement.controllers;
 
-import com.example.rentalmanagement.models.DTO.customer.CustomerRequestDTONoId;
-import com.example.rentalmanagement.models.DTO.customer.CustomerResponseDTO;
+import com.example.rentalmanagement.models.DTO.user.UserRequestDTONoId;
+import com.example.rentalmanagement.models.DTO.user.UserResponseDTO;
 import com.example.rentalmanagement.models.DTO.reservation.ReservationResponseDTONoIdNoFk;
-import com.example.rentalmanagement.services.CustomerService;
+import com.example.rentalmanagement.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,12 +24,12 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/v1/customers")
 @Tag(name = "Customer Management", description = "Operations pertaining to customers in the Rental Management System")
-public class CustomerController {
+public class UserController {
 
-    private final CustomerService customerService;
+    private final UserService userService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -40,27 +40,27 @@ public class CustomerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the customers",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerResponseDTO.class)) })
+                            schema = @Schema(implementation = UserResponseDTO.class)) })
     })
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getAllCustomers",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.findAll());
+    public ResponseEntity<List<UserResponseDTO>> getAllCustomers() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
     /**
-     * Retrieve a customer by its ID.
-     * @param id ID of the customer.
+     * Retrieve a user by its ID.
+     * @param id ID of the user.
      * @return Customer details.
      */
-    @Operation(summary = "Retrieve a customer by its ID")
+    @Operation(summary = "Retrieve a user by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the customer",
+            @ApiResponse(responseCode = "200", description = "Found the user",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerResponseDTO.class)) }),
+                            schema = @Schema(implementation = UserResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
@@ -69,41 +69,41 @@ public class CustomerController {
             path ="/getCustomerById/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.findById(id));
+    public ResponseEntity<UserResponseDTO> getCustomer(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     /**
-     * Create a new customer.
-     * @param customer DTO containing customer details.
-     * @return Created customer details.
+     * Create a new user.
+     * @param customer DTO containing user details.
+     * @return Created user details.
      */
-    @Operation(summary = "Create a new customer")
+    @Operation(summary = "Create a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created the customer",
+            @ApiResponse(responseCode = "201", description = "Created the user",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerResponseDTO.class)) })
+                            schema = @Schema(implementation = UserResponseDTO.class)) })
     })
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTONoId customer) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customer));
+    public ResponseEntity<UserResponseDTO> createCustomer(@RequestBody @Valid UserRequestDTONoId customer) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(customer));
     }
 
     /**
-     * Update an existing customer.
-     * @param id ID of the customer to update.
-     * @param customer DTO containing updated customer details.
-     * @return Updated customer details.
+     * Update an existing user.
+     * @param id ID of the user to update.
+     * @param customer DTO containing updated user details.
+     * @return Updated user details.
      */
-    @Operation(summary = "Update an existing customer")
+    @Operation(summary = "Update an existing user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Updated the customer",
+            @ApiResponse(responseCode = "200", description = "Updated the user",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerResponseDTO.class)) }),
+                            schema = @Schema(implementation = UserResponseDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
@@ -113,18 +113,18 @@ public class CustomerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable Integer id, @RequestBody @Valid CustomerRequestDTONoId customer) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.update(id, customer));
+    public ResponseEntity<UserResponseDTO> updateCustomer(@PathVariable Integer id, @RequestBody @Valid UserRequestDTONoId customer) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, customer));
     }
 
     /**
-     * Delete a customer by its ID.
-     * @param id ID of the customer to delete.
+     * Delete a user by its ID.
+     * @param id ID of the user to delete.
      * @return No content.
      */
-    @Operation(summary = "Delete a customer by its ID")
+    @Operation(summary = "Delete a user by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Deleted the customer",
+            @ApiResponse(responseCode = "204", description = "Deleted the user",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
@@ -135,16 +135,16 @@ public class CustomerController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
-        customerService.delete(id);
+        userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
-     * Retrieve reservations by customer ID.
-     * @param id ID of the customer.
+     * Retrieve reservations by user ID.
+     * @param id ID of the user.
      * @return List of reservations.
      */
-    @Operation(summary = "Retrieve reservations by customer ID")
+    @Operation(summary = "Retrieve reservations by user ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the reservations",
                     content = { @Content(mediaType = "application/json",
@@ -154,11 +154,11 @@ public class CustomerController {
     })
     @RequestMapping(
             method = RequestMethod.GET,
-            path ="customer/{id}/reservation",
+            path ="user/{id}/reservation",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<ReservationResponseDTONoIdNoFk>> getReservationsByCustomerId(@PathVariable Integer id) {
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.getReservationsByCustomerId(id));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getReservationsByCustomerId(id));
     }
 
 }
