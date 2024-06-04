@@ -19,12 +19,14 @@ import java.util.List;
 @Table(name = "role")
 public class RoleEnt {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "ROLE_SEQ_GEN", sequenceName = "role_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLE_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @SequenceGenerator(name = "ROLE_SEQ_GEN", sequenceName = "role_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLE_SEQ_GEN")
     private Integer id;
 
     @NotNull(message = "Role cannot be null")

@@ -21,12 +21,13 @@ import java.util.List;
 @Table(name = "event")
 public class EventEnt {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+    //@SequenceGenerator(name = "EVENT_SEQ_GEN", sequenceName = "event_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EVENT_SEQ_GEN")
     @Id
-    @SequenceGenerator(name = "EVENT_SEQ_GEN", sequenceName = "event_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EVENT_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)

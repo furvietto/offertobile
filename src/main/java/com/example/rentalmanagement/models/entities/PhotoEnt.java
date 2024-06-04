@@ -18,12 +18,14 @@ import java.io.Serial;
 @Table(name = "photo")
 public class PhotoEnt {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "PHOTO_SEQ_GEN", sequenceName = "photo_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PHOTO_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @SequenceGenerator(name = "PHOTO_SEQ_GEN", sequenceName = "photo_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PHOTO_SEQ_GEN")
     private Integer id;
 
     @Column(nullable = false)

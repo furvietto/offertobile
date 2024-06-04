@@ -42,7 +42,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    private PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         // Returns an instance of BCryptPasswordEncoder to encode passwords
         return new BCryptPasswordEncoder();
     }

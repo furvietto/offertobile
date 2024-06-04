@@ -49,6 +49,42 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MissingValueException.class)
+    public ResponseEntity<ErrorDetails> handleGlobalMissingValueException (Exception exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "MISSING_VALUE"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MinOrMaxReachedException.class)
+    public ResponseEntity<ErrorDetails> handleGlobalMinOrMaxReachedException (Exception exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "STRING MUST BE BETWEEN 15 AND 34"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MaxCharacterReachedException.class)
+    public ResponseEntity<ErrorDetails> handleGlobalMaxCharacterReachedException (Exception exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "CHARACTER MUST BE LESS THAN 500"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException (Exception exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
@@ -60,5 +96,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 
 }

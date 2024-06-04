@@ -14,12 +14,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
@@ -30,6 +32,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/apartments")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Apartment Management", description = "Operations pertaining to apartments in the Rental Management System")
 public class ApartmentController {
 

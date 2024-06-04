@@ -21,12 +21,14 @@ import java.util.List;
 @Entity
 @Table(name = "reservation")
 public class ReservationEnt {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "RESERVATION_SEQ_GEN", sequenceName = "reservation_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESERVATION_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @SequenceGenerator(name = "RESERVATION_SEQ_GEN", sequenceName = "reservation_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESERVATION_SEQ_GEN")
     private Integer id;
 
     @ManyToOne

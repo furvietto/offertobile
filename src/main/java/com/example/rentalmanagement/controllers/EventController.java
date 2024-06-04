@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/events")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Event Management", description = "Operations pertaining to events in the Rental Management System")
 public class EventController {
     private final EventService eventService;

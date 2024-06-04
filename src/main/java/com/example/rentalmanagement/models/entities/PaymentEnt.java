@@ -23,12 +23,14 @@ import java.util.Date;
 @Table(name = "payment")
 public class PaymentEnt {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "PAYMENT_SEQ_GEN", sequenceName = "payment_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PAYMENT_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @SequenceGenerator(name = "PAYMENT_SEQ_GEN", sequenceName = "payment_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PAYMENT_SEQ_GEN")
     private Integer id;
 
     @Column(nullable = false)

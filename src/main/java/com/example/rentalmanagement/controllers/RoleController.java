@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/roles")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Role Management", description = "Operations pertaining to roles in the Rental Management System")
 public class RoleController {
 

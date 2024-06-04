@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,16 +19,19 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "user")
 public class UserEnt implements UserDetails {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "USER_SEQ_GEN", sequenceName = "user_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GEN")
     @Id
-    @SequenceGenerator(name = "USER_SEQ_GEN", sequenceName = "user_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
@@ -54,18 +54,18 @@ public class UserEnt implements UserDetails {
     @Size(min = 1, max = 200,message = "Address must be between 1 and 200 characters")
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotNull(message = "email should not be null or empty")
     @Email(message = "Email should be valid")
     @Size(max = 100,message = "Email must be less than 100 characters")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotNull(message = "phone should not be null or empty")
     @Size(min = 10, max = 15,message = "Phone must be between 10 and 15 characters")
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotNull(message = "username should not be null or empty")
     @Size(min = 5, max = 50, message ="Username must be between 5 and 50 characters")
     private String username;
@@ -75,12 +75,10 @@ public class UserEnt implements UserDetails {
     @Size(min = 8)
     private String password;
 
-    @Size(min = 15, max = 34, message = "IBAN must be between 15 and 34 characters")
     private String iban;
 
     private Date contractDate;
 
-    @Size(max = 500, message = "Contract details must be less than 500 characters")
     private String contractDetails;
 
     @ManyToOne

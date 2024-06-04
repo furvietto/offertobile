@@ -25,7 +25,7 @@ public class SecurityConfiguration {
       http
               .csrf(AbstractHttpConfigurer::disable)//Disabilita la protezione CSRF
               .authorizeHttpRequests(authorize -> authorize
-                      .requestMatchers("").permitAll()  // Permetti accesso pubblico a specifici endpoint
+                      .requestMatchers("/v1/auth/**", "/swagger-ui/**","/v3/api-docs/**", "/v2/api-docs/**").permitAll()  // Permetti accesso pubblico a specifici endpoint
                       .anyRequest().authenticated()  // Richiedi autenticazione per tutti gli altri endpoint
               )
               .sessionManagement(session -> session

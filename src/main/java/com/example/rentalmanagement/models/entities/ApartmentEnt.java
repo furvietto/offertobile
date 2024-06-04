@@ -21,12 +21,14 @@ import java.util.List;
 @Table(name = "apartment")
 public class ApartmentEnt {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    //@Serial
+    //private static final long serialVersionUID = 1L;
 
+
+    //@SequenceGenerator(name = "APARTMENT_SEQ_GEN", sequenceName = "apartment_sequence", allocationSize = 1)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APARTMENT_SEQ_GEN")
     @Id
-    @SequenceGenerator(name = "APARTMENT_SEQ_GEN", sequenceName = "apartment_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APARTMENT_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
