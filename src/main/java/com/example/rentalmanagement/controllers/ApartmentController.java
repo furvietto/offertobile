@@ -53,6 +53,7 @@ public class ApartmentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ApartmentResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/getAllApartments",
             method = RequestMethod.GET,
@@ -74,6 +75,7 @@ public class ApartmentController {
             @ApiResponse(responseCode = "404", description = "Apartment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/getApartmentById/{id}",
             method = RequestMethod.GET,
@@ -93,6 +95,7 @@ public class ApartmentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ApartmentResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -114,6 +117,7 @@ public class ApartmentController {
             @ApiResponse(responseCode = "404", description = "Apartment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/updateApartments/{id}",
             method = RequestMethod.PUT,
@@ -135,6 +139,7 @@ public class ApartmentController {
             @ApiResponse(responseCode = "404", description = "Apartment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/deleteApartmentsById/{id}",
             method = RequestMethod.DELETE,
@@ -157,6 +162,7 @@ public class ApartmentController {
             @ApiResponse(responseCode = "404", description = "Event not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @GetMapping("apartment/{id}/event")
     public ResponseEntity<EventResponseDTO> getEventByApartmentId(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(apartmentService.getEventByApartmentId(id));
@@ -173,6 +179,7 @@ public class ApartmentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PhotoResponseDTONoIdNoFk.class)) })
     })
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/apartment/{id}/event",
             method = RequestMethod.GET,
@@ -192,6 +199,7 @@ public class ApartmentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReservationResponseDTONoIdNoFk.class)) })
     })
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_OWNER')")
     @RequestMapping(
             path = "/apartments/{id}/reservations",
             method = RequestMethod.GET,

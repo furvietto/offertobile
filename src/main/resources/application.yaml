@@ -8,6 +8,17 @@ server:
   port: 8080
 
 spring:
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: d203c19959ce72
+    password: cd279a4d5d2862
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   datasource:
     url: jdbc:mysql://localhost:3306/rental_management_db
     username: root

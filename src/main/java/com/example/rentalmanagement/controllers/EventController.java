@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class EventController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = EventResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             path = "getAllEvents",
             method = RequestMethod.GET,
@@ -66,6 +68,7 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             path = "getEventById/{id}",
             method = RequestMethod.GET,
@@ -86,6 +89,7 @@ public class EventController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = EventResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -109,6 +113,7 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @RequestMapping(
             path = "updateEvent/{id}",
             method = RequestMethod.PUT,
@@ -131,6 +136,7 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event not found",
                     content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(
             path = "deleteEvent/{id}",
             method = RequestMethod.DELETE,
@@ -154,6 +160,7 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             path = "event/{id}/apartments",
             method = RequestMethod.GET,

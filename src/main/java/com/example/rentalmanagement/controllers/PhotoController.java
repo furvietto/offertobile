@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class PhotoController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PhotoResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getAllphotos",
@@ -65,6 +67,7 @@ public class PhotoController {
             @ApiResponse(responseCode = "404", description = "Photo not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getPhotoById/{id}",
@@ -85,6 +88,7 @@ public class PhotoController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PhotoResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -107,6 +111,7 @@ public class PhotoController {
             @ApiResponse(responseCode = "404", description = "Photo not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.PUT,
             path ="/updatePhoto/{id}",
@@ -129,6 +134,7 @@ public class PhotoController {
             @ApiResponse(responseCode = "404", description = "Photo not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.DELETE,
             path ="/deletePaymentById/{id}",

@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class RoleController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RoleResponseDTO.class)) })
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.findAll());
@@ -51,6 +53,7 @@ public class RoleController {
             @ApiResponse(responseCode = "404", description = "Role not found",
                     content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleResponseDTO> getRoleById(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.findById(id));
@@ -62,6 +65,7 @@ public class RoleController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RoleResponseDTO.class)) })
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleResponseDTO> createRole(@RequestBody @Valid RoleRequestDTO role) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roleService.save(role));
@@ -75,6 +79,7 @@ public class RoleController {
             @ApiResponse(responseCode = "404", description = "Role not found",
                     content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleResponseDTO> updateRole(@PathVariable Integer id, @RequestBody @Valid RoleRequestDTO role) {
         return ResponseEntity.status(HttpStatus.OK).body(roleService.update(id, role));
@@ -87,6 +92,7 @@ public class RoleController {
             @ApiResponse(responseCode = "404", description = "Role not found",
                     content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteRole(@PathVariable Integer id) {
         roleService.delete(id);

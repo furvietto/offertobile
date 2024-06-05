@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class PaymentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getAllPayments",
@@ -66,6 +68,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getPaymentById/{id}",
@@ -86,6 +89,7 @@ public class PaymentController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -108,6 +112,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @RequestMapping(
             method = RequestMethod.PUT,
             path ="/updatePayment/{id}",
@@ -130,6 +135,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Payment not found",
                     content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(
             method = RequestMethod.DELETE,
             path ="/deletePaymentById/{id}",
@@ -153,6 +159,7 @@ public class PaymentController {
             @ApiResponse(responseCode = "404", description = "Reservation not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/payment/{id}/reservation",

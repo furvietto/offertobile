@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class UserController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getAllCustomers",
@@ -66,6 +68,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="/getCustomerById/{id}",
@@ -86,6 +89,7 @@ public class UserController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -109,6 +113,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.PUT,
             path ="/updateCustomer/{id}",
@@ -131,6 +136,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.DELETE,
             path ="/deleteCustomer/{id}",
@@ -154,6 +160,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Customer not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path ="user/{id}/reservation",

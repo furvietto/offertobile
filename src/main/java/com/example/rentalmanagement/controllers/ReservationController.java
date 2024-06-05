@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class ReservationController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReservationResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             path = "/getAllReservation",
             method = RequestMethod.GET,
@@ -66,6 +68,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "404", description = "Reservation not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             path = "/getReservationById/{id}",
             method = RequestMethod.GET,
@@ -85,6 +88,7 @@ public class ReservationController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReservationResponseDTO.class)) })
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @RequestMapping(
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -107,6 +111,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "404", description = "Reservation not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @RequestMapping(
             method = RequestMethod.PUT,
             path = "/updateReservation/{id}",
@@ -128,6 +133,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "404", description = "Reservation not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @RequestMapping(
             method = RequestMethod.DELETE,
             path = "/deleteReservation/{id}",
@@ -150,6 +156,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "404", description = "Reservation not found",
                     content = @Content)
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'OWNER')")
     @RequestMapping(
             method = RequestMethod.GET,
             path = "/reservation/{id}/payments",
